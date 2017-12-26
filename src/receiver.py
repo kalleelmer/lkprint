@@ -1,15 +1,18 @@
 from threading import Thread
 import boto3
+import json
 
 class TicketReceiver(Thread):
-    def __init__(self):
+    def __init__(self, printer):
         Thread.__init__(self, name="TicketReceiver")
+        self.printer = printer
 
     def receiveMessages(self):
         while True:
             for message in self.queue.receive_messages(WaitTimeSeconds=10):
                 print("Ticket:", message.body)
-                # TODO print ticket
+                ticket = json.loads(message.body)
+                self.printer.printTicket(ticket)
                 message.delete()
     
     def run(self):

@@ -1,18 +1,7 @@
-import serial
+from draw import TextBox
+from printer import TTYPrinter
 
-class TextBox:
-    def __init__(self, x, y, size, text):
-        self.x = x
-        self.y = y
-        self.size = size
-        self.text = text
-
-    def render(self):
-        line = "A" + str(self.y) + "," + str(self.x) + ",1,1," + str(self.size) + "," + str(self.size) + ",N,\"" + self.text + "\"\r\n"
-        return bytes(line, "utf-8")
-
-
-port = serial.Serial("/dev/ttyACM0")
+port = TTYPrinter("/dev/ttyACM0")
 
 title = TextBox(250, 300, 3, "Spexet")
 time = TextBox(250, 250, 2, "19 maj 17:00")
