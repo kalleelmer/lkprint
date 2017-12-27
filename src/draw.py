@@ -24,6 +24,9 @@ class TicketPrinter:
         rate = TextBox(250, 150, 2, ticket["rate_name"])
         self.port.write(rate.render())
         self.port.write(b"P1\r\n")
+    
+    def getID(self):
+        return self.port.getID()
         
         
         
