@@ -1,0 +1,24 @@
+#!/bin/sh
+
+. /usr/share/debconf/confmodule
+
+set -e
+
+pip3 install --system boto3 jmespath
+
+echo ";Generated from debconf" > /etc/lkprint.conf
+
+echo "[Printer]" >> /etc/lkprint.conf
+db_get lkprint/printerport
+echo "Port = $RET" >> /etc/lkprint.conf
+
+echo "[API]" >> /etc/lkprint.conf
+db_get lkprint/apiurl
+echo "URL = $RET" >> /etc/lkprint.conf
+db_get lkprint/apitoken
+echo "Token = $RET" >> /etc/lkprint.conf
+
+adduser --system --home /opt/lkprint lkprint
+systemctl daemon-reload
+systemctl enable lkprint
+systemctl start lkprint

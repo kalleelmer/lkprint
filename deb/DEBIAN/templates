@@ -1,0 +1,13 @@
+Template: lkprint/printerport
+Type: string
+Default: /dev/ttyACM0
+Description: TTY port for serial printer communication:
+
+Template: lkprint/apiurl
+Type: string
+Default: https://api.lkticket.net
+Description: Base URL for API:
+
+Template: lkprint/apitoken
+Type: string
+Description: Token for API access:

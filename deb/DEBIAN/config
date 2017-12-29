@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+. /usr/share/debconf/confmodule
+
+db_input low lkprint/printerport || true
+db_input medium lkprint/apiurl || true
+db_input high lkprint/apitoken || true
+
+db_go

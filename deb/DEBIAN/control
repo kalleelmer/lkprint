@@ -1,0 +1,10 @@
+Package: lkprint
+Version: 0.1
+Architecture: all
+Maintainer: kallee
+Installed-Size: 6
+Depends: bash, python3, python3-serial
+Section: testing
+Priority: optional
+Homepage: https://github.com/kalleelmer/lkprint
+Description: Server för biljettskrivare.

@@ -1,0 +1,11 @@
+[Unit]
+Description=LKPrint
+
+[Service]
+Type=simple
+ExecStart=/opt/lkprint/lkprint /etc/lkprint.conf
+User=lkprint
+Group=nogroup
+
+[Install]
+WantedBy=multi-user.target
