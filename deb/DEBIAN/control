@@ -3,7 +3,7 @@ Version: 0.1
 Architecture: all
 Maintainer: kallee
 Installed-Size: 6
-Depends: bash, python3, python3-serial
+Depends: bash, python3, python3-serial, pip3
 Section: testing
 Priority: optional
 Homepage: https://github.com/kalleelmer/lkprint
