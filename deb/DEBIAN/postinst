@@ -18,6 +18,7 @@ echo "URL = $RET" >> /etc/lkprint.conf
 db_get lkprint/apitoken
 echo "Token = $RET" >> /etc/lkprint.conf
 
+echo ";Generated from debconf" > /opt/lkprint/.aws/credentials
 echo "[default]" >> /opt/lkprint/.aws/credentials
 db_get lkprint/awsid
 echo "aws_access_key_id=$RET" >> /opt/lkprint/.aws/credentials
