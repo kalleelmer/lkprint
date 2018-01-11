@@ -7,5 +7,7 @@ set -e
 db_input low lkprint/printerport || true
 db_input medium lkprint/apiurl || true
 db_input high lkprint/apitoken || true
+db_input high lkprint/awsid || true
+db_input high lkprint/awssecret || true
 
 db_go

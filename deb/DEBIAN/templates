@@ -11,3 +11,11 @@ Description: Base URL for API:
 Template: lkprint/apitoken
 Type: string
 Description: Token for API access:
+
+Template: lkprint/awsid
+Type: string
+Description: AWS Access Key ID:
+
+Template: lkprint/awssecret
+Type: string
+Description: AWS Secret Access Key:

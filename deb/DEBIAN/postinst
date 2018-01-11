@@ -18,7 +18,16 @@ echo "URL = $RET" >> /etc/lkprint.conf
 db_get lkprint/apitoken
 echo "Token = $RET" >> /etc/lkprint.conf
 
+echo "[default]" >> /opt/lkprint/.aws/credentials
+db_get lkprint/awsid
+echo "aws_access_key_id=$RET" >> /opt/lkprint/.aws/credentials
+db_get lkprint/awssecret
+echo "aws_secret_access_key=$RET" >> /opt/lkprint/.aws/credentials
+chown -R root:lkprint /opt/lkprint
+chmod 750 /opt/lkprint/.aws/credentials
+
 adduser --system --home /opt/lkprint lkprint
+usermod -a -G lkprint lkprint
 usermod -a -G dialout lkprint
 systemctl daemon-reload
 systemctl enable lkprint
