@@ -27,6 +27,7 @@ chown -R root:lkprint /opt/lkprint
 chmod 750 /opt/lkprint/.aws/credentials
 
 adduser --system --home /opt/lkprint lkprint
+getent group lkprint || groupadd lkprint
 usermod -a -G lkprint lkprint
 usermod -a -G dialout lkprint
 systemctl daemon-reload
