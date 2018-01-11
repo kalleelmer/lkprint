@@ -19,6 +19,7 @@ db_get lkprint/apitoken
 echo "Token = $RET" >> /etc/lkprint.conf
 
 adduser --system --home /opt/lkprint lkprint
+usermod -a -G dialout lkprint
 systemctl daemon-reload
 systemctl enable lkprint
 systemctl start lkprint
