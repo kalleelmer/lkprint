@@ -19,6 +19,7 @@ class TTYPort(AbstractPort):
     def write(self, data):
         self.initSerial()
         self.tty.write(data)
+        self.tty.flush()
     
     def readLine(self):
         self.initSerial()
