@@ -12,4 +12,9 @@ class Core:
         if response.status_code != 200:
             raise IOError("API response " + str(response.status_code))
         return response.json()
+    
+    def setAlive(self, pid):
+        response = requests.put(self.url + "/desk/printers/" + str(pid) + "/alive", headers=self.headers)
+        if response.status_code != 204:
+            raise IOError("API response " + str(response.status_code))
         
