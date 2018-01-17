@@ -2,4 +2,3 @@
 set -e
 systemctl disable lkprint
 systemctl stop lkprint
-deluser lkprint

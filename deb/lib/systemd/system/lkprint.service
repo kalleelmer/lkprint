@@ -5,7 +5,7 @@ Description=LKPrint
 Type=simple
 ExecStart=/opt/lkprint/lkprint /etc/lkprint.conf
 User=lkprint
-Group=nogroup
+Group=lkprint
 
 [Install]
 WantedBy=multi-user.target

@@ -12,8 +12,8 @@ echo "[Printer]" >> /etc/lkprint.conf
 db_get lkprint/printerport
 echo "Port = $RET" >> /etc/lkprint.conf
 
-adduser --system --home /opt/lkprint lkprint
-getent group lkprint || groupadd lkprint
+adduser --system --group --home /opt/lkprint lkprint
+usermod -a -G dialout lkprint
 
 echo "[API]" >> /etc/lkprint.conf
 db_get lkprint/apiurl
@@ -28,10 +28,8 @@ echo "aws_access_key_id=$RET" >> /opt/lkprint/.aws/credentials
 db_get lkprint/awssecret
 echo "aws_secret_access_key=$RET" >> /opt/lkprint/.aws/credentials
 chown -R root:lkprint /opt/lkprint
-chmod 750 /opt/lkprint/.aws/credentials
+chmod 750 /opt/lkprint
 
-usermod -a -G lkprint lkprint
-usermod -a -G dialout lkprint
 systemctl daemon-reload
 systemctl enable lkprint
 systemctl start lkprint
