@@ -5,9 +5,9 @@ from botocore.exceptions import ClientError
 from time import sleep
 
 class TicketReceiver(Thread):
-    def __init__(self, printer, core):
+    def __init__(self, printers, core):
         Thread.__init__(self, name="TicketReceiver")
-        self.printer = printer
+        self.printers = printers
         self.core = core
         self.params = None
 
@@ -25,19 +25,21 @@ class TicketReceiver(Thread):
     
     def run(self):
         while True:
-            try:
-                print("Looking for printer")
-                self.pid = self.printer.getID()
-                print("Found printer", self.pid)
-                print("Retrieving printer data from Core")
-                self.params = self.core.getPrinter(self.pid)
-                print("Printer name is", self.params["name"])
-                print("URL is", self.params["url"])
-                sqs = boto3.resource("sqs")
-                self.queue = sqs.Queue(self.params["url"])
-                self.receiveMessages()
-            except (IOError, ClientError) as e:
-                print("Printer down:", e)
-                sleep(10)
+            for printer in self.printers:
+                self.printer = printer
+                try:
+                    print("Looking for printer", self.printer)
+                    self.pid = self.printer.getID()
+                    print("Found printer", self.pid)
+                    print("Retrieving printer data from Core")
+                    self.params = self.core.getPrinter(self.pid)
+                    print("Printer name is", self.params["name"])
+                    print("URL is", self.params["url"])
+                    sqs = boto3.resource("sqs")
+                    self.queue = sqs.Queue(self.params["url"])
+                    self.receiveMessages()
+                except (IOError, ClientError) as e:
+                    print("Printer", self.printer, "down:", e)
+            sleep(10)
 
 

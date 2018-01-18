@@ -21,14 +21,15 @@ config.read(args.config)
 
 port = None
 
-if config["Printer"]["port"] == "stdout":
-    port = TestPort()
-else:
-    port = TTYPort(config["Printer"]["port"])
+printers = []
 
-printer = TicketPrinter(port)
+if config["Printer"]["port"] == "stdout":
+    printers.append(TicketPrinter(TestPort()))
+else:
+    for port in config["Printer"]["port"].split(","):
+        printers.append(TicketPrinter(TTYPort(port)))
 
 core = Core(config["API"]["URL"], config["API"]["Token"])
 
-receiver = TicketReceiver(printer, core)
+receiver = TicketReceiver(printers, core)
 receiver.start()

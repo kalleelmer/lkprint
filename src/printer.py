@@ -39,9 +39,18 @@ class TTYPort(AbstractPort):
             matches = re.search(".+System Location,lk([0-9]+)", line)
             if matches != None:
                 return int(matches.group(1))
+    
+    def __str__(self):
+        return self.path
         
 
 class TestPort(AbstractPort):
     def write(self, data):
         print(data)
+    
+    def getID(self):
+        return 1
+    
+    def __str__(self):
+        return "stdout"
 
