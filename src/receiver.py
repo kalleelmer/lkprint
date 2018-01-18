@@ -25,10 +25,10 @@ class TicketReceiver(Thread):
     
     def run(self):
         while True:
+            print("Scanning", len(self.printers), "printer ports")
             for printer in self.printers:
                 self.printer = printer
                 try:
-                    print("Looking for printer", self.printer)
                     self.pid = self.printer.getID()
                     print("Found printer", self.pid)
                     print("Retrieving printer data from Core")
@@ -40,6 +40,7 @@ class TicketReceiver(Thread):
                     self.receiveMessages()
                 except (IOError, ClientError) as e:
                     print("Printer", self.printer, "down:", e)
+                    self.printer.close()
             sleep(10)
 
 

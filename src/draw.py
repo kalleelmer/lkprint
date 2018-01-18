@@ -30,6 +30,9 @@ class TicketPrinter:
     
     def __str__(self):
         return self.port.__str__()
+    
+    def close(self):
+        self.port.close()
         
         
         

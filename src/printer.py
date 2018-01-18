@@ -6,6 +6,9 @@ class AbstractPort:
     def write(self):
         pass
     
+    def close(self):
+        pass
+    
     
 class TTYPort(AbstractPort):
     def __init__(self, path):
@@ -29,6 +32,8 @@ class TTYPort(AbstractPort):
             buffer += char
             char = self.tty.read(1)
             if len(char) == 0:
+                self.tty.close()
+                self.tty = None
                 raise IOError("Timeout")
         return buffer
     
@@ -42,6 +47,11 @@ class TTYPort(AbstractPort):
     
     def __str__(self):
         return self.path
+    
+    def close(self):
+        if self.tty != None:
+            self.tty.close()
+            self.tty = None
         
 
 class TestPort(AbstractPort):
