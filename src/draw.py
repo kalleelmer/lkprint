@@ -15,6 +15,7 @@ class TicketPrinter:
         self.port = port
 
     def printTicket(self, ticket):
+        self.port.write(b"N\r\n")
         title = TextBox(self.port.offset_x, 300, 3, ticket["show_name"])
         self.port.write(title.render())
         time = TextBox(self.port.offset_x, 250, 2, ticket["performance_start"])

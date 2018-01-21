@@ -81,7 +81,6 @@ class ParallelPort(SerialPort):
             self.file = open(self.path, "r+b")
     
     def write(self, data):
-        print(data)
         self.initPort()
         self.file.write(data)
         self.file.flush()
