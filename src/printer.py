@@ -99,7 +99,10 @@ class ParallelPort(SerialPort):
         
     def close(self):
         if self.file != None:
-            self.file.close()
+            try:
+                self.file.close()
+            except OSError as e:
+                pass
             self.file = None
 
 
