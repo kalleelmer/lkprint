@@ -3,6 +3,10 @@ import re
 
 
 class AbstractPort:
+    def __init__(self):
+        self.offset_x = 0
+        self.offset_y = 0
+    
     def write(self):
         pass
     
@@ -18,8 +22,10 @@ class AbstractPort:
     
 class SerialPort(AbstractPort):
     def __init__(self, path):
+        AbstractPort.__init__(self)
         self.path = path
         self.tty = None
+        self.offset_x = 250
         
     def initPort(self):
         if self.tty == None:
@@ -65,14 +71,17 @@ class SerialPort(AbstractPort):
 
 class ParallelPort(SerialPort):
     def __init__(self, path):
+        AbstractPort.__init__(self)
         self.path = path
         self.file = None
+        self.offset_x = 350
     
     def initPort(self):
         if self.file == None:
             self.file = open(self.path, "r+b")
     
     def write(self, data):
+        print(data)
         self.initPort()
         self.file.write(data)
         self.file.flush()

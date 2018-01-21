@@ -15,13 +15,13 @@ class TicketPrinter:
         self.port = port
 
     def printTicket(self, ticket):
-        title = TextBox(250, 300, 3, ticket["show_name"])
+        title = TextBox(self.port.offset_x, 300, 3, ticket["show_name"])
         self.port.write(title.render())
-        time = TextBox(250, 250, 2, ticket["performance_start"])
+        time = TextBox(self.port.offset_x, 250, 2, ticket["performance_start"])
         self.port.write(time.render())
-        category = TextBox(250, 200, 2, ticket["category_name"])
+        category = TextBox(self.port.offset_x, 200, 2, ticket["category_name"])
         self.port.write(category.render())
-        rate = TextBox(250, 150, 2, ticket["rate_name"])
+        rate = TextBox(self.port.offset_x, 150, 2, ticket["rate_name"])
         self.port.write(rate.render())
         self.port.write(b"P1\r\n")
     
