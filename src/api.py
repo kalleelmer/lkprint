@@ -13,6 +13,12 @@ class Core:
             raise IOError("API response " + str(response.status_code))
         return response.json()
     
+    def getPrinterBySerialNumber(self, serial_number):
+        response = requests.get(self.url + "/desk/printers/sno/" + serial_number, headers=self.headers)
+        if response.status_code != 200:
+            raise IOError("API response " + str(response.status_code))
+        return response.json()
+
     def setAlive(self, pid):
         response = requests.put(self.url + "/desk/printers/" + str(pid) + "/alive", headers=self.headers)
         if response.status_code != 204:

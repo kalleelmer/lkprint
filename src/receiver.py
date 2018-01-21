@@ -1,6 +1,6 @@
 from threading import Thread
-import boto3
 import json
+import boto3
 from botocore.exceptions import ClientError
 from time import sleep
 
@@ -19,9 +19,11 @@ class TicketReceiver(Thread):
                 ticket = json.loads(message.body)
                 self.printer.printTicket(ticket)
                 message.delete()
-            if self.printer.getID() != self.params["id"]:
+            if self.pid > 0 and self.printer.getID() != self.pid:
                 raise IOError("Printer ID changed")
-            self.core.setAlive(self.pid)
+            if self.sno != None and self.printer.getSerialNumber() != self.sno:
+                raise IOError("Printer serial number changed")
+            self.core.setAlive(self.params["id"])
     
     def run(self):
         while True:
@@ -30,9 +32,15 @@ class TicketReceiver(Thread):
                 self.printer = printer
                 try:
                     self.pid = self.printer.getID()
-                    print("Found printer", self.pid)
-                    print("Retrieving printer data from Core")
-                    self.params = self.core.getPrinter(self.pid)
+                    self.sno = self.printer.getSerialNumber()
+                    if self.pid > 0:
+                        print("Found printer", self.pid)
+                        print("Retrieving printer data from Core")
+                        self.params = self.core.getPrinter(self.pid)
+                    elif self.sno != None:
+                        print("Found printer", self.sno)
+                        print("Retrieving printer data from Core")
+                        self.params = self.core.getPrinterBySerialNumber(self.sno)
                     print("Printer name is", self.params["name"])
                     print("URL is", self.params["url"])
                     sqs = boto3.resource("sqs")

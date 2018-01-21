@@ -1,7 +1,12 @@
-Template: lkprint/printerport
+Template: lkprint/printerserial
 Type: string
-Default: /dev/ttyACM0
+Default: /dev/ttyACM0,/dev/ttyACM3
 Description: TTY port for serial printer communication:
+
+Template: lkprint/printerparallel
+Type: string
+Default: /dev/usb/lp0
+Description: LP port for parallel printer communication:
 
 Template: lkprint/apiurl
 Type: string

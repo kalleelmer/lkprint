@@ -27,6 +27,9 @@ class TicketPrinter:
     
     def getID(self):
         return self.port.getID()
+
+    def getSerialNumber(self):
+        return self.port.getSerialNumber()
     
     def __str__(self):
         return self.port.__str__()

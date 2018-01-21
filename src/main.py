@@ -1,6 +1,6 @@
 from receiver import TicketReceiver
 from draw import TicketPrinter
-from printer import TestPort, TTYPort
+from printer import TestPort, SerialPort, ParallelPort
 from api import Core
 import argparse
 import os
@@ -23,11 +23,13 @@ port = None
 
 printers = []
 
-if config["Printer"]["port"] == "stdout":
+if config["Printer"]["Serial"] == "stdout":
     printers.append(TicketPrinter(TestPort()))
 else:
-    for port in config["Printer"]["port"].split(","):
-        printers.append(TicketPrinter(TTYPort(port)))
+    for port in config["Printer"]["Serial"].split(","):
+        printers.append(TicketPrinter(SerialPort(port)))
+    for port in config["Printer"]["Parallel"].split(","):
+        printers.append(TicketPrinter(ParallelPort(port)))
 
 core = Core(config["API"]["URL"], config["API"]["Token"])
 

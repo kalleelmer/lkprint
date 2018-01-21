@@ -9,11 +9,14 @@ pip3 install --system boto3 jmespath
 echo ";Generated from debconf" > /etc/lkprint.conf
 
 echo "[Printer]" >> /etc/lkprint.conf
-db_get lkprint/printerport
-echo "Port = $RET" >> /etc/lkprint.conf
+db_get lkprint/printerserial
+echo "Serial = $RET" >> /etc/lkprint.conf
+db_get lkprint/printerparallel
+echo "Parallel = $RET" >> /etc/lkprint.conf
 
 adduser --system --group --home /opt/lkprint lkprint
 usermod -a -G dialout lkprint
+usermod -a -G lp lkprint
 
 echo "[API]" >> /etc/lkprint.conf
 db_get lkprint/apiurl
