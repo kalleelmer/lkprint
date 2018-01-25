@@ -23,6 +23,7 @@ class TicketReceiver(Thread):
                 raise IOError("Printer ID changed")
             if self.sno != None and self.printer.getSerialNumber() != self.sno:
                 raise IOError("Printer serial number changed")
+            print("Updating printer alive status")
             self.core.setAlive(self.params["id"])
     
     def run(self):
