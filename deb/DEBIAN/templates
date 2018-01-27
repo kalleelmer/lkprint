@@ -5,7 +5,7 @@ Description: TTY port for serial printer communication:
 
 Template: lkprint/printerparallel
 Type: string
-Default: /dev/usb/lp0
+Default: /dev/usb/lp0,/dev/usb/lp3
 Description: LP port for parallel printer communication:
 
 Template: lkprint/apiurl
