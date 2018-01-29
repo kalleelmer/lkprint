@@ -9,6 +9,18 @@ class TextBox:
         line = "A" + str(self.y) + "," + str(self.x) + ",1,1," + str(self.size) + "," + str(self.size) + ",N,\"" + self.text + "\"\r\n"
         return bytes(line, "utf-8")
     
+    
+class DataMatrix:
+    def __init__(self, x, y, size, data):
+        self.x = x
+        self.y = y
+        self.size = size
+        self.data = data
+        
+    def render(self):
+        line = "b" + str(self.y) + "," + str(self.x) + ",D," + str(self.size) + ",\"" + str(self.data) + "\"\r\n"
+        return bytes(line, "utf-8")
+    
 
 class TicketPrinter:
     def __init__(self, port):
@@ -24,6 +36,8 @@ class TicketPrinter:
         self.port.write(category.render())
         rate = TextBox(self.port.offset_x, 150, 2, ticket["rate_name"])
         self.port.write(rate.render())
+        dm = DataMatrix(self.port.offset_x + 510, 120, 7, str(ticket["id"]))
+        self.port.write(dm.render())
         self.port.write(b"P1\r\n")
     
     def getID(self):
