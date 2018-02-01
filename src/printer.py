@@ -25,7 +25,7 @@ class SerialPort(AbstractPort):
         AbstractPort.__init__(self)
         self.path = path
         self.tty = None
-        self.offset_x = 250
+        self.offset_x = 70
         
     def initPort(self):
         if self.tty == None:
@@ -74,7 +74,7 @@ class ParallelPort(SerialPort):
         AbstractPort.__init__(self)
         self.path = path
         self.file = None
-        self.offset_x = 350
+        self.offset_x = 70
     
     def initPort(self):
         if self.file == None:

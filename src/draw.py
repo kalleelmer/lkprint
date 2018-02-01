@@ -28,15 +28,15 @@ class TicketPrinter:
 
     def printTicket(self, ticket):
         self.port.write(b"N\r\n")
-        title = TextBox(self.port.offset_x, 300, 3, ticket["show_name"])
+        title = TextBox(self.port.offset_x, 380, 3, ticket["show_name"])
         self.port.write(title.render())
-        time = TextBox(self.port.offset_x, 250, 2, ticket["performance_start"])
+        time = TextBox(self.port.offset_x, 330, 2, ticket["performance_start"])
         self.port.write(time.render())
-        category = TextBox(self.port.offset_x, 200, 2, ticket["category_name"])
+        category = TextBox(self.port.offset_x, 280, 2, ticket["category_name"])
         self.port.write(category.render())
-        rate = TextBox(self.port.offset_x, 150, 2, ticket["rate_name"])
+        rate = TextBox(self.port.offset_x, 230, 2, ticket["rate_name"])
         self.port.write(rate.render())
-        dm = DataMatrix(self.port.offset_x + 510, 120, 7, str(ticket["id"]))
+        dm = DataMatrix(self.port.offset_x + 610, 190, 7, str(ticket["id"]))
         self.port.write(dm.render())
         self.port.write(b"P1\r\n")
     
