@@ -1,12 +1,13 @@
 class TextBox:
-    def __init__(self, x, y, size, text):
+    def __init__(self, x, y, font, size, text):
         self.x = x
         self.y = y
+        self.font = font
         self.size = size
         self.text = text
 
     def render(self):
-        line = "A" + str(self.y) + "," + str(self.x) + ",1,1," + str(self.size) + "," + str(self.size) + ",N,\"" + self.text + "\"\r\n"
+        line = "A" + str(self.y) + "," + str(self.x) + ",1," + str(self.font) + "," + str(self.size) + "," + str(self.size) + ",N,\"" + self.text + "\"\r\n"
         return bytes(line, "utf-8")
     
     
@@ -28,13 +29,13 @@ class TicketPrinter:
 
     def printTicket(self, ticket):
         self.port.write(b"N\r\n")
-        title = TextBox(self.port.offset_x, 380, 3, ticket["show_name"])
+        title = TextBox(self.port.offset_x, 410, "b", 1, ticket["show_name"])
         self.port.write(title.render())
-        time = TextBox(self.port.offset_x, 330, 2, ticket["performance_start"])
+        time = TextBox(self.port.offset_x, 330, "a", 1, ticket["performance_start"])
         self.port.write(time.render())
-        category = TextBox(self.port.offset_x, 280, 2, ticket["category_name"])
+        category = TextBox(self.port.offset_x, 280, "a", 1, ticket["category_name"])
         self.port.write(category.render())
-        rate = TextBox(self.port.offset_x, 230, 2, ticket["rate_name"])
+        rate = TextBox(self.port.offset_x, 230, "a", 1, ticket["rate_name"])
         self.port.write(rate.render())
         dm = DataMatrix(self.port.offset_x + 610, 190, 7, str(ticket["id"]))
         self.port.write(dm.render())
