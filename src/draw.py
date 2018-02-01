@@ -8,7 +8,7 @@ class TextBox:
 
     def render(self):
         line = "A" + str(self.y) + "," + str(self.x) + ",1," + str(self.font) + "," + str(self.size) + "," + str(self.size) + ",N,\"" + self.text + "\"\r\n"
-        return bytes(line, "utf-8")
+        return bytes(line, "cp850")
     
     
 class DataMatrix:
@@ -20,7 +20,7 @@ class DataMatrix:
         
     def render(self):
         line = "b" + str(self.y) + "," + str(self.x) + ",D," + str(self.size) + ",\"" + str(self.data) + "\"\r\n"
-        return bytes(line, "utf-8")
+        return bytes(line, "cp850")
     
 
 class TicketPrinter:
