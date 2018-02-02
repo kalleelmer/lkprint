@@ -25,7 +25,7 @@ class SerialPort(AbstractPort):
         AbstractPort.__init__(self)
         self.path = path
         self.tty = None
-        self.offset_x = 70
+        self.offset_x = 0
         
     def initPort(self):
         if self.tty == None:
@@ -94,7 +94,7 @@ class ParallelPort(SerialPort):
     def getSerialNumber(self):
         self.write(b"USR\r\n")
         while True:
-            line = self.readLine().decode("utf-8")
+            line = self.readLine().decode("utf-8", "ignore")
             return line
         
     def close(self):
