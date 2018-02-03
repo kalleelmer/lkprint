@@ -26,16 +26,21 @@ class DataMatrix:
 class TicketPrinter:
     def __init__(self, port):
         self.port = port
+        self.fallback = False
 
     def printTicket(self, ticket):
+        titleFont = 4 if self.fallback else "b"
+        bodyFont = 4 if self.fallback else "a"
+        titleSize = 2 if self.fallback else 1
+        bodySize = 1 if self.fallback else 1
         self.port.write(b"N\r\n")
-        title = TextBox(self.port.offset_x, 410, "b", 1, ticket["show_name"])
+        title = TextBox(self.port.offset_x, 410, titleFont, titleSize, ticket["show_name"])
         self.port.write(title.render())
-        time = TextBox(self.port.offset_x, 330, "a", 1, ticket["performance_start"])
+        time = TextBox(self.port.offset_x, 330, bodyFont, bodySize, ticket["performance_start"])
         self.port.write(time.render())
-        category = TextBox(self.port.offset_x, 280, "a", 1, ticket["category_name"])
+        category = TextBox(self.port.offset_x, 280, bodyFont, bodySize, ticket["category_name"])
         self.port.write(category.render())
-        rate = TextBox(self.port.offset_x, 230, "a", 1, ticket["rate_name"])
+        rate = TextBox(self.port.offset_x, 230, bodyFont, bodySize, ticket["rate_name"])
         self.port.write(rate.render())
         dm = DataMatrix(self.port.offset_x + 610, 190, 7, str(ticket["id"]))
         self.port.write(dm.render())

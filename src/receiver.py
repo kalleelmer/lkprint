@@ -5,10 +5,11 @@ from botocore.exceptions import ClientError
 from time import sleep
 
 class TicketReceiver(Thread):
-    def __init__(self, printers, core):
+    def __init__(self, printers, core, fallback):
         Thread.__init__(self, name="TicketReceiver")
         self.printers = printers
         self.core = core
+        self.fallback = fallback
         self.params = None
 
     def receiveMessages(self):
@@ -32,6 +33,7 @@ class TicketReceiver(Thread):
             for printer in self.printers:
                 self.printer = printer
                 try:
+                    self.printer.fallback = False
                     self.pid = self.printer.getID()
                     self.sno = self.printer.getSerialNumber()
                     if self.pid > 0:
@@ -39,9 +41,16 @@ class TicketReceiver(Thread):
                         print("Retrieving printer data from Core")
                         self.params = self.core.getPrinter(self.pid)
                     elif self.sno != None:
-                        print("Found printer", self.sno)
-                        print("Retrieving printer data from Core")
-                        self.params = self.core.getPrinterBySerialNumber(self.sno)
+                        if len(self.sno) == 0:
+                            if self.fallback == None:
+                                raise IOError("Undefined serial number")
+                            else:
+                                self.params = self.core.getPrinterBySerialNumber(self.fallback)
+                                self.printer.fallback = True
+                        else:
+                            print("Found printer", "'" + self.sno + "'")
+                            print("Retrieving printer data from Core")
+                            self.params = self.core.getPrinterBySerialNumber(self.sno)
                     print("Printer name is", self.params["name"])
                     print("URL is", self.params["url"])
                     sqs = boto3.resource("sqs")

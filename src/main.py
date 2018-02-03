@@ -33,5 +33,9 @@ else:
 
 core = Core(config["API"]["URL"], config["API"]["Token"])
 
-receiver = TicketReceiver(printers, core)
+fallback = None
+if "UndefinedFallback" in config["Printer"]:
+    fallback = config["Printer"]["UndefinedFallback"]
+
+receiver = TicketReceiver(printers, core, fallback)
 receiver.start()
