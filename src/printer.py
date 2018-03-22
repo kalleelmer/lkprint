@@ -31,7 +31,7 @@ class SerialPort(AbstractPort):
         self.initPort()
         self.tty.write(data)
         self.tty.flush()
-        print("Send:", data)
+#         print("Send:", data)
         
     def readChar(self):
         return self.tty.read(1)
@@ -47,16 +47,21 @@ class SerialPort(AbstractPort):
                 self.tty.close()
                 self.tty = None
                 raise IOError("Timeout")
-        print("Receive:", buffer)
+#         if len(buffer) > 0:
+#             print("Receive:", buffer)
         return buffer
     
     def waitForOk(self):
         line = b""
         while line != b"Ok":
             line = self.readLine()
+            if line == b"Out of media":
+                raise IOError("Out of media")
+            elif line == b"Next label not found":
+                raise IOError("Next label not found")
     
     def getID(self):
-        self.write(b"SYSVAR(18)=2\r\n")
+        self.write(b"SYSVAR(18)=10\r\n")
         self.waitForOk()
         self.write(b"SYSVAR(43)=1\r\n")
         self.waitForOk();
