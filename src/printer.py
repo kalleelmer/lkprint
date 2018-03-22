@@ -25,12 +25,13 @@ class SerialPort(AbstractPort):
         
     def initPort(self):
         if self.tty == None:
-            self.tty = serial.Serial(self.path, timeout=2)
+            self.tty = serial.Serial(self.path, timeout=5)
         
     def write(self, data):
         self.initPort()
         self.tty.write(data)
         self.tty.flush()
+        print("Send:", data)
         
     def readChar(self):
         return self.tty.read(1)
@@ -46,17 +47,25 @@ class SerialPort(AbstractPort):
                 self.tty.close()
                 self.tty = None
                 raise IOError("Timeout")
+        print("Receive:", buffer)
         return buffer
     
+    def waitForOk(self):
+        line = b""
+        while line != b"Ok":
+            line = self.readLine()
+    
     def getID(self):
-        self.write(b"VERBOFF\r\n")
+        self.write(b"SYSVAR(18)=2\r\n")
+        self.waitForOk()
         self.write(b"SYSVAR(43)=1\r\n")
+        self.waitForOk();
         self.write(b"COPY \"/home/user/lkprint.conf\", \"usb1:\"\r\n")
         while True:
             line = self.readLine().decode("utf-8")
-            print("Receive:", line)
             matches = re.search("id=([0-9]+)", line)
             if matches != None:
+                self.waitForOk()
                 return int(matches.group(1))
     
     def __str__(self):

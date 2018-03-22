@@ -12,8 +12,8 @@ class TicketReceiver(Thread):
         self.params = None
 
     def receiveMessages(self):
-        print("Listening for tickets")
         while True:
+            print("Listening for tickets")
             for message in self.queue.receive_messages(WaitTimeSeconds=10):
                 print("Ticket:", message.body)
                 ticket = json.loads(message.body)
