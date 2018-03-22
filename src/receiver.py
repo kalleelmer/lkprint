@@ -5,11 +5,10 @@ from botocore.exceptions import ClientError
 from time import sleep
 
 class TicketReceiver(Thread):
-    def __init__(self, printers, core, fallback):
+    def __init__(self, printers, core):
         Thread.__init__(self, name="TicketReceiver")
         self.printers = printers
         self.core = core
-        self.fallback = fallback
         self.params = None
 
     def receiveMessages(self):
@@ -22,8 +21,6 @@ class TicketReceiver(Thread):
                 message.delete()
             if self.pid > 0 and self.printer.getID() != self.pid:
                 raise IOError("Printer ID changed")
-            if self.sno != None and self.printer.getSerialNumber() != self.sno:
-                raise IOError("Printer serial number changed")
             print("Updating printer alive status")
             self.core.setAlive(self.params["id"])
     
@@ -35,22 +32,10 @@ class TicketReceiver(Thread):
                 try:
                     self.printer.fallback = False
                     self.pid = self.printer.getID()
-                    self.sno = self.printer.getSerialNumber()
                     if self.pid > 0:
                         print("Found printer", self.pid)
                         print("Retrieving printer data from Core")
                         self.params = self.core.getPrinter(self.pid)
-                    elif self.sno != None:
-                        if len(self.sno) == 0:
-                            if self.fallback == None:
-                                raise IOError("Undefined serial number")
-                            else:
-                                self.params = self.core.getPrinterBySerialNumber(self.fallback)
-                                self.printer.fallback = True
-                        else:
-                            print("Found printer", "'" + self.sno + "'")
-                            print("Retrieving printer data from Core")
-                            self.params = self.core.getPrinterBySerialNumber(self.sno)
                     print("Printer name is", self.params["name"])
                     print("URL is", self.params["url"])
                     sqs = boto3.resource("sqs")

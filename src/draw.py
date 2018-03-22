@@ -1,57 +1,43 @@
-class TextBox:
-    def __init__(self, x, y, font, size, text):
-        self.x = x
-        self.y = y
-        self.font = font
-        self.size = size
-        self.text = text
-
-    def render(self):
-        line = "A" + str(self.y) + "," + str(self.x) + ",1," + str(self.font) + "," + str(self.size) + "," + str(self.size) + ",N,\"" + self.text + "\"\r\n"
-        return bytes(line, "cp850")
-    
-    
-class DataMatrix:
-    def __init__(self, x, y, size, data):
-        self.x = x
-        self.y = y
-        self.size = size
-        self.data = data
-        
-    def render(self):
-        line = "b" + str(self.y) + "," + str(self.x) + ",D," + str(self.size) + ",\"" + str(self.data) + "\"\r\n"
-        return bytes(line, "cp850")
-    
-
 class TicketPrinter:
     def __init__(self, port):
         self.port = port
         self.fallback = False
+    
+    def writeLine(self, line):
+        self.port.write(line.encode("utf-8") + b"\r\n")
 
     def printTicket(self, ticket):
-        titleFont = 4 if self.fallback else "b"
-        bodyFont = 4 if self.fallback else "a"
-        titleSize = 2 if self.fallback else 1
-        bodySize = 1 if self.fallback else 1
-        self.port.write(b"N\r\n")
-        title = TextBox(self.port.offset_x, 410, titleFont, titleSize, ticket["show_name"])
-        self.port.write(title.render())
-        time = TextBox(self.port.offset_x, 330, bodyFont, bodySize, ticket["performance_start"])
-        self.port.write(time.render())
-        category = TextBox(self.port.offset_x, 280, bodyFont, bodySize, ticket["category_name"])
-        self.port.write(category.render())
-        rate = TextBox(self.port.offset_x, 230, bodyFont, bodySize, ticket["rate_name"])
-        self.port.write(rate.render())
-        dm = DataMatrix(self.port.offset_x + 610, 190, 7, str(ticket["id"]))
-        self.port.write(dm.render())
-        self.port.write(b"P1\r\n")
+        self.writeLine("NASC \"UTF-8\"")
+        self.writeLine("BEEP")
+        self.writeLine("CLEAR")
+        self.writeLine("DIR 4")
+        self.writeLine("ALIGN 4")
+        
+        self.writeLine("FONT \"OPTIBrianJamesBoldCond Bold\",25")
+        
+        self.writeLine("PRPOS 480, 50")
+        self.writeLine("PRTXT \"" + ticket["show_name"] + "\"")
+        
+        self.writeLine("FONT \"Montserrat SemiBold\",14,0,100")
+        self.writeLine("PRPOS 530, 50")
+        self.writeLine("PRTXT \"" + ticket["performance_start"] + "\"")
+        self.writeLine("PRPOS 580, 50")
+        self.writeLine("PRTXT \"" + ticket["category_name"] + ", " + ticket["rate_name"] + "\"")
+        
+        self.writeLine("FONT \"Montserrat SemiBold\",6,0,100")
+        self.writeLine("PRPOS 640, 80")
+        self.writeLine("PRTXT \"Kom gärna 20 minuter innan föreställningen börjar\"")
+        
+        self.writeLine("PRPOS 520,650")
+        self.writeLine("BARSET \"DATAMATRIX\",1,1,10,0,0,20")
+        self.writeLine("BARFONT \"Univers\",10,8,5,1,1 ON")
+        self.writeLine("PRBAR \"012345\"")
+        
+        self.writeLine("PRINTFEED")
     
     def getID(self):
         return self.port.getID()
 
-    def getSerialNumber(self):
-        return self.port.getSerialNumber()
-    
     def __str__(self):
         return self.port.__str__()
     

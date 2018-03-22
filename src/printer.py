@@ -16,10 +16,6 @@ class AbstractPort:
     def getID(self):
         return 0
 
-    def getSerialNumber(self):
-        return None
-
-    
 class SerialPort(AbstractPort):
     def __init__(self, path):
         AbstractPort.__init__(self)
@@ -53,10 +49,13 @@ class SerialPort(AbstractPort):
         return buffer
     
     def getID(self):
-        self.write(b"UQ\r\n")
+        self.write(b"VERBOFF\r\n")
+        self.write(b"SYSVAR(43)=1\r\n")
+        self.write(b"COPY \"/home/user/lkprint.conf\", \"usb1:\"\r\n")
         while True:
             line = self.readLine().decode("utf-8")
-            matches = re.search(".+System Location,lk([0-9]+)", line)
+            print("Receive:", line)
+            matches = re.search("id=([0-9]+)", line)
             if matches != None:
                 return int(matches.group(1))
     
@@ -67,43 +66,6 @@ class SerialPort(AbstractPort):
         if self.tty != None:
             self.tty.close()
             self.tty = None
-        
-
-class ParallelPort(SerialPort):
-    def __init__(self, path):
-        AbstractPort.__init__(self)
-        self.path = path
-        self.file = None
-        self.offset_x = 70
-    
-    def initPort(self):
-        if self.file == None:
-            self.file = open(self.path, "r+b")
-    
-    def write(self, data):
-        self.initPort()
-        self.file.write(data)
-        self.file.flush()
-    
-    def readChar(self):
-        return self.file.read(1)
-    
-    def getID(self):
-        return 0
-
-    def getSerialNumber(self):
-        self.write(b"USR\r\n")
-        while True:
-            line = self.readLine().decode("utf-8", "ignore")
-            return line
-        
-    def close(self):
-        if self.file != None:
-            try:
-                self.file.close()
-            except OSError as e:
-                pass
-            self.file = None
 
 
 class TestPort(AbstractPort):
