@@ -92,3 +92,5 @@ class TestPort(AbstractPort):
     def __str__(self):
         return "stdout"
 
+    def waitForOk(self):
+        pass
