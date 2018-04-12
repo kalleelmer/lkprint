@@ -17,10 +17,10 @@ class TicketReceiver(Thread):
             for message in self.queue.receive_messages(WaitTimeSeconds=10):
                 print("Ticket:", message.body)
                 ticket = json.loads(message.body)
-                ticketStatus = self.core.getTicket(ticket["id"])
+                ticketStatus = self.core.getTicket(ticket["2id"])
                 if ticketStatus["printed"] == 0:
                     self.printer.printTicket(ticket)
-                    self.core.setTicketPrinted(self.params["id"], ticket["id"])
+                    self.core.setTicketPrinted(self.params["id"], ticket["2id"])
                 else:
                     print("Already printed, status", str(ticketStatus["printed"]))
                 message.delete()

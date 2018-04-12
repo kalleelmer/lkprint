@@ -32,7 +32,7 @@ class TicketPrinter:
         self.sendCommand("PRPOS 520,650")
         self.sendCommand("BARSET \"DATAMATRIX\",1,1,10,0,0,20")
         self.sendCommand("BARFONT \"Univers\",10,8,5,1,1 ON")
-        self.sendCommand("PRBAR \"" + str(ticket["id"]) + "\"")
+        self.sendCommand("PRBAR \"" + str(ticket["2id"]) + "\"")
         
         self.sendCommand("PRINTFEED")
     
