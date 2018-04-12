@@ -24,6 +24,11 @@ class TicketPrinter:
         self.sendCommand("PRTXT \"" + ticket["performance_start"] + "\"")
         self.sendCommand("PRPOS 580, 50")
         self.sendCommand("PRTXT \"" + ticket["category_name"] + ", " + ticket["rate_name"] + "\"")
+
+        if "performance_note" in ticket:
+            self.sendCommand("FONT \"Montserrat SemiBold\",6,0,100")
+            self.sendCommand("PRPOS 650, 90")
+            self.sendCommand("PRTXT \"" + ticket["performance_note"] + "\"")
         
 #         self.sendCommand("FONT \"Montserrat SemiBold\",6,0,100")
 #         self.sendCommand("PRPOS 640, 80")
