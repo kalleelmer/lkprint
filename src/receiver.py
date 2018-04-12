@@ -17,7 +17,12 @@ class TicketReceiver(Thread):
             for message in self.queue.receive_messages(WaitTimeSeconds=10):
                 print("Ticket:", message.body)
                 ticket = json.loads(message.body)
-                self.printer.printTicket(ticket)
+                ticketStatus = self.core.getTicket(ticket["id"])
+                if ticketStatus["printed"] == 0:
+                    self.printer.printTicket(ticket)
+                    self.core.setTicketPrinted(self.params["id"], ticket["id"])
+                else:
+                    print("Already printed, status", str(ticketStatus["printed"]))
                 message.delete()
             if self.pid > 0 and self.printer.getID() != self.pid:
                 raise IOError("Printer ID changed")
