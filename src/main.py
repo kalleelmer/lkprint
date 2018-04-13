@@ -10,6 +10,7 @@ import sys
 
 parser = argparse.ArgumentParser()
 parser.add_argument("config", help="Configuration file, such as /etc/lkprint.conf")
+parser.add_argument("--trace", help="Trace printer communication", action="store_true")
 args = parser.parse_args()
 
 if not os.path.isfile(args.config):
@@ -27,7 +28,7 @@ if config["Printer"]["Serial"] == "stdout":
     printers.append(TicketPrinter(TestPort()))
 else:
     for port in config["Printer"]["Serial"].split(","):
-        printers.append(TicketPrinter(SerialPort(port)))
+        printers.append(TicketPrinter(SerialPort(port, args.trace)))
 
 core = Core(config["API"]["URL"], config["API"]["Token"])
 

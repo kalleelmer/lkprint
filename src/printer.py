@@ -17,11 +17,12 @@ class AbstractPort:
         return 0
 
 class SerialPort(AbstractPort):
-    def __init__(self, path):
+    def __init__(self, path, trace=False):
         AbstractPort.__init__(self)
         self.path = path
         self.tty = None
         self.offset_x = 0
+        self.trace = trace
         
     def initPort(self):
         if self.tty == None:
@@ -31,7 +32,8 @@ class SerialPort(AbstractPort):
         self.initPort()
         self.tty.write(data)
         self.tty.flush()
-#         print("Send:", data)
+        if self.trace:
+            print("S:", data)
         
     def readChar(self):
         return self.tty.read(1)
@@ -47,8 +49,8 @@ class SerialPort(AbstractPort):
                 self.tty.close()
                 self.tty = None
                 raise IOError("Timeout")
-#         if len(buffer) > 0:
-#             print("Receive:", buffer)
+        if self.trace and len(buffer) > 0:
+            print("R:", buffer)
         return buffer
     
     def waitForOk(self):
