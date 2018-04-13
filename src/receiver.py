@@ -13,8 +13,10 @@ class TicketReceiver(Thread):
 
     def receiveMessages(self):
         while True:
+            print("Updating printer alive status")
+            self.core.setAlive(self.params["id"])
             print("Listening for tickets")
-            for message in self.queue.receive_messages(WaitTimeSeconds=10):
+            for message in self.queue.receive_messages(WaitTimeSeconds=5):
                 print("Ticket:", message.body)
                 ticket = json.loads(message.body)
                 ticketStatus = self.core.getTicket(ticket["2id"])
@@ -26,8 +28,6 @@ class TicketReceiver(Thread):
                 message.delete()
             if self.pid > 0 and self.printer.getID() != self.pid:
                 raise IOError("Printer ID changed")
-            print("Updating printer alive status")
-            self.core.setAlive(self.params["id"])
     
     def run(self):
         while True:
