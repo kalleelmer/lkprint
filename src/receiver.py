@@ -46,7 +46,7 @@ class TicketReceiver(Thread):
                     sqs = boto3.resource("sqs")
                     self.queue = sqs.Queue(self.params["url"])
                     self.receiveMessages()
-                except (IOError, ClientError, OSError) as e:
+                except (IOError, ClientError, OSError, UnicodeDecodeError) as e:
                     print("Printer", self.printer, "down:", e)
                     self.printer.close()
             sleep(10)
